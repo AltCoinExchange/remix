@@ -21,6 +21,7 @@ class TreeView {
     this.cssUl = ui.formatCss(opts.css || {}, style.cssUl)
     this.cssLi = ui.formatCss(opts.css || {}, style.cssLi)
     this.nodeIsExpanded = {}
+    this.nodes = {}
   }
 
   render (json) {
@@ -65,6 +66,7 @@ class TreeView {
     if (data.children) {
       var isExpanded = self.nodeIsExpanded[keyPath]
       var list = yo`<ul style=${self.cssUl}>${children}</ul>`
+      this.nodes[keyPath] = list
       list.style.display = isExpanded !== undefined ? (isExpanded ? 'block' : 'none') : (expand ? 'block' : 'none')
       caret.className = list.style.display === 'none' ? 'fa fa-caret-right' : 'fa fa-caret-down'
       label.onclick = function () {
@@ -78,6 +80,10 @@ class TreeView {
       caret.style.visibility = 'hidden'
     }
     return li
+  }
+
+  nodeAt (path) {
+    return this.nodes[path]
   }
 
   formatSelfDefault (key, data) {
